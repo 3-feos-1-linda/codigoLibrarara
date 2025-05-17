@@ -5,23 +5,27 @@ class Libreria:
     def __init__(self):
         self.__catalogo = []  # Lista de libros en el catálogo
         self.__dineroEnCaja = 1000000  # Inversión inicial
+
     
     def darCatalogo(self) -> list:
         return self.__catalogo
+        
     
     def darDineroEnCaja(self) -> float:
         return self.__dineroEnCaja
+
     
     def registrarLibro(self, pISBN: str, pTitulo: str, pPrecioCompra: float, pPrecioVenta: float) -> bool:
         # Verificar que no exista otro libro con el mismo ISBN
         for libro in self.__catalogo:
             if libro.darISBN() == pISBN:
                 return False
-        
+
         # Crear y agregar un nuevo libro al catálogo
         nuevoLibro = Libro(pISBN, pTitulo, pPrecioCompra, pPrecioVenta)
         self.__catalogo.append(nuevoLibro)
         return True
+
     
     def eliminarLibro(self, pISBN: str) -> bool:
         for i, libro in enumerate(self.__catalogo):
@@ -29,18 +33,21 @@ class Libreria:
                 del self.__catalogo[i]
                 return True
         return False
+
     
     def buscarLibroPorTitulo(self, pTitulo: str) -> Libro:
         for libro in self.__catalogo:
             if libro.darTitulo() == pTitulo:
                 return libro
         return None
+
     
     def buscarLibroPorISBN(self, pISBN: str) -> Libro:
         for libro in self.__catalogo:
             if libro.darISBN() == pISBN:
                 return libro
         return None
+
     
     def abastecerLibro(self, pISBN: str, pCantidad: int) -> bool:
         libro = self.buscarLibroPorISBN(pISBN)
@@ -60,6 +67,7 @@ class Libreria:
             return True
         
         return False
+
     
     def venderLibro(self, pISBN: str, pCantidad: int) -> bool:
         libro = self.buscarLibroPorISBN(pISBN)
@@ -74,6 +82,7 @@ class Libreria:
             return True
         
         return False
+
     
     def contarTransaccionesAbastecimientoLibro(self, pISBN: str) -> int:
         libro = self.buscarLibroPorISBN(pISBN)
@@ -81,6 +90,7 @@ class Libreria:
             return -1
         
         return libro.contarTransaccionesAbastecimiento()
+
     
     def buscarLibroMasCostoso(self) -> Libro:
         if not self.__catalogo:
@@ -92,6 +102,7 @@ class Libreria:
                 libroMasCostoso = libro
         
         return libroMasCostoso
+
     
     def buscarLibroMenosCostoso(self) -> Libro:
         if not self.__catalogo:
@@ -103,6 +114,7 @@ class Libreria:
                 libroMenosCostoso = libro
         
         return libroMenosCostoso
+
     
     def buscarLibroMasVendido(self) -> Libro:
         if not self.__catalogo:
