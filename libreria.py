@@ -32,7 +32,7 @@ class Libreria:
     
     def buscarLibroPorTitulo(self, pTitulo: str) -> Libro:
         for libro in self.__catalogo:
-            if libro.darTitulo().lower() == pTitulo.lower():
+            if libro.darTitulo() == pTitulo:
                 return libro
         return None
     
