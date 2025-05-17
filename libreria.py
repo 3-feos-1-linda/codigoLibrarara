@@ -4,7 +4,7 @@ class Libreria:
     
     def __init__(self):
         self.__catalogo = []  # Lista de libros en el catálogo
-        self.__dineroEnCaja = 1000000  # Inversión inicial de $1.000.000
+        self.__dineroEnCaja = 1000000  # Inversión inicial
     
     def darCatalogo(self) -> list:
         return self.__catalogo
