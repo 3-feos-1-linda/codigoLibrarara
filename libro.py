@@ -1,86 +1,63 @@
-
 from transaccion import Transaccion
+from tipo import Tipo
 
 class Libro:
-    def __init__(self, pISBN: str, pTitulo: str, pPrecioCompra: float, pPrecioVenta: float):
-        self.__isbn = pISBN
-        self.__titulo = pTitulo
-        self.__precioCompra = pPrecioCompra
-        self.__precioVenta = pPrecioVenta
-        self.__cantidadActual = 0
+    def __init__(self, isbn: str, titulo: str, precio_venta: float, precio_compra: float, cantidad_actual: int = 0, ruta_imagen: str = ""):
+        self.__isbn = isbn
+        self.__titulo = titulo
+        self.__precio_venta = precio_venta
+        self.__precio_compra = precio_compra
+        self.__cantidad_actual = cantidad_actual
+        self.__ruta_imagen = ruta_imagen
         self.__transacciones = []
     
-    
-    def darISBN(self) -> str:
+    def darIsbn(self) -> str:
         return self.__isbn
-    
+
     
     def darTitulo(self) -> str:
         return self.__titulo
-    
-    
-    def darPrecioCompra(self) -> float:
-        return self.__precioCompra
-    
+
     
     def darPrecioVenta(self) -> float:
-        return self.__precioVenta
+        return self.__precio_venta
+
     
+    def darPrecioCompra(self) -> float:
+        return self.__precio_compra
+
     
     def darCantidadActual(self) -> int:
-        return self.__cantidadActual
+        return self.__cantidad_actual
+
     
+    def darRutaImagen(self) -> str:
+        return self.__ruta_imagen
+
     
-    def darTransacciones(self) -> list:
+    def vender(self, cantidad: int, fecha: str) -> bool:  # Retorna True si la venta fue exitosa, False en caso contrario
+        if cantidad <= 0:
+            return False
+
+        if self.__cantidad_actual >= cantidad:
+            self.__cantidad_actual -= cantidad
+            transaccion = Transaccion(Tipo.VENTA, fecha, cantidad)
+            self.__transacciones.append(transaccion)
+            return True
+        
+        return False
+
+    
+    def abastecer(self, cantidad: int, fecha: str) -> None:
+        if cantidad > 0:
+            self.__cantidad_actual += cantidad
+            transaccion = Transaccion(Tipo.ABASTECIMIENTO, fecha, cantidad)
+            self.__transacciones.append(transaccion)
+
+    
+    def darTransacciones(self):
         return self.__transacciones
-    
-    
-    def cambiarPrecioCompra(self, pPrecioCompra: float):
-        self.__precioCompra = pPrecioCompra
 
     
-    def cambiarPrecioVenta(self, pPrecioVenta: float):
-        self.__precioVenta = pPrecioVenta
-
-    
-    def abastecer(self, pCantidad: int) -> bool:
-        if pCantidad <= 0:
-            return False
-        
-        # Crear una transacción de abastecimiento
-        transaccion = Transaccion(Transaccion.Tipo.ABASTECIMIENTO, pCantidad)
-        self.__transacciones.append(transaccion)
-        
-        # Actualizar la cantidad actual
-        self.__cantidadActual += pCantidad
-        return True
-    
-    
-    def vender(self, pCantidad: int) -> bool:
-        # Verificar que hay suficientes ejemplares
-        if pCantidad <= 0 or pCantidad > self.__cantidadActual:
-            return False
-        
-        # Crear una transacción de venta
-        transaccion = Transaccion(Transaccion.Tipo.VENTA, pCantidad)
-        self.__transacciones.append(transaccion)
-        
-        # Actualizar la cantidad actual
-        self.__cantidadActual -= pCantidad
-        return True
-    
-
-    def contarTransaccionesAbastecimiento(self) -> int:
-        contador = 0
-        for transaccion in self.__transacciones:
-            if transaccion.darTipo() == Transaccion.Tipo.ABASTECIMIENTO:
-                contador += 1
-        return contador
-    
-
-    def calcularTotalVendidos(self) -> int:
-        totalVendidos = 0
-        for transaccion in self.__transacciones:
-            if transaccion.darTipo() == Transaccion.Tipo.VENTA:
-                totalVendidos += transaccion.darCantidad()
-        return totalVendidos
+    def toString(self) -> str:
+        return f"ISBN: {self.__isbn}, Título: {self.__titulo}, Precio Venta: ${self.__precio_venta}, Precio Compra: ${self.__precio_compra}, Cantidad: {self.__cantidad_actual}"
