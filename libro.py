@@ -10,6 +10,7 @@ class Libro:
         self.__cantidad_actual = cantidad_actual
         self.__ruta_imagen = ruta_imagen
         self.__transacciones = []
+
     
     def darIsbn(self) -> str:
         return self.__isbn
@@ -35,10 +36,10 @@ class Libro:
         return self.__ruta_imagen
 
     
-    def vender(self, cantidad: int, fecha: str) -> bool:  # Retorna True si la venta fue exitosa, False en caso contrario
+    def vender(self, cantidad: int, fecha: str) -> bool:
         if cantidad <= 0:
             return False
-
+        
         if self.__cantidad_actual >= cantidad:
             self.__cantidad_actual -= cantidad
             transaccion = Transaccion(Tipo.VENTA, fecha, cantidad)
@@ -48,7 +49,7 @@ class Libro:
         return False
 
     
-    def abastecer(self, cantidad: int, fecha: str) -> None:
+    def abastecer(self, cantidad: int, fecha: str) -> void:
         if cantidad > 0:
             self.__cantidad_actual += cantidad
             transaccion = Transaccion(Tipo.ABASTECIMIENTO, fecha, cantidad)
