@@ -23,7 +23,7 @@ def main():
         libro2 = tienda.registrarLibro("9788498387087", "El Principito", 15000, 25000)
         print(f"Libro registrado: {libro2.toString()}")
                                       
-        libro3 = tienda.registrarLibro("9788498383621", "El Código Da Vinci", 25000, 38000)
+        libro3 = tienda.registrarLibro("9788498383621", "En esta noche, en este mundo", 25000, 38000)
         print(f"Libro registrado: {libro3.toString()}")
         
         print("\nCatálogo actual:")
@@ -49,9 +49,9 @@ def main():
         print("No se pudo abastecer 'El Principito'")
     
     if tienda.abastecer("9788498383621", 8, fecha_actual):
-        print(f"Se abasteció 'El Código Da Vinci' con 8 ejemplares. Caja: ${tienda.darCaja():.2f}")
+        print(f"Se abasteció 'En esta noche, en este mundo' con 8 ejemplares. Caja: ${tienda.darCaja():.2f}")
     else:
-        print("No se pudo abastecer 'El Código Da Vinci'")
+        print("No se pudo abastecer 'En esta noche, en este mundo'")
 
     
     # Vender libros
@@ -70,9 +70,9 @@ def main():
     
     # Intentar vender más ejemplares de los disponibles, error
     if tienda.vender("9788498383621", 10, fecha_actual):
-        print(f"Se vendieron 10 ejemplares de 'El Código Da Vinci'. Caja: ${tienda.darCaja():.2f}")
+        print(f"Se vendieron 10 ejemplares de 'En esta noche, en este mundo'. Caja: ${tienda.darCaja():.2f}")
     else:
-        print("No se pudo realizar la venta de 'El Código Da Vinci' (stock insuficiente)")
+        print("No se pudo realizar la venta de 'En esta noche, en este mundo' (stock insuficiente)")
 
     
     # Buscar libros
