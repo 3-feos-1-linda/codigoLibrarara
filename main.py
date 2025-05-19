@@ -1,169 +1,121 @@
-from libreria import Libreria
+from tiendaDeLibrs import TiendaDeLibros
 from libro import Libro
 from transaccion import Transaccion
+from tipo import Tipo
+import datetime
 
-def mostrarMenuPrincipal():
-    print("\n===== SISTEMA DE GESTIÓN DE LIBRERÍA =====")
-    print("1. Registrar un libro en el catálogo")
-    print("2. Eliminar un libro del catálogo")
-    print("3. Buscar un libro por título")
-    print("4. Buscar un libro por ISBN")
-    print("5. Abastecer ejemplares de un libro")
-    print("6. Vender ejemplares de un libro")
-    print("7. Calcular cantidad de transacciones de abastecimiento de un libro")
-    print("8. Buscar el libro más costoso")
-    print("9. Buscar el libro menos costoso")
-    print("10. Buscar el libro más vendido")
-    print("11. Ver dinero en caja")
-    print("12. Ver catálogo completo")
-    print("0. Salir")
-    print("==========================================")
+def obtener_fecha_actual() -> str:
+    hoy = datetime.datetime.now()
+    return hoy.strftime("%d/%m/%Y")
 
-def mostrarInfoLibro(libro):
-    print(f"\nInformación del libro:")
-    print(f"ISBN: {libro.darISBN()}")
-    print(f"Título: {libro.darTitulo()}")
-    print(f"Precio de compra: ${libro.darPrecioCompra()}")
-    print(f"Precio de venta: ${libro.darPrecioVenta()}")
-    print(f"Cantidad actual: {libro.darCantidadActual()} ejemplares")
-    print(f"Total vendidos: {libro.calcularTotalVendidos()} ejemplares")
 
 def main():
-    libreria = Libreria()
+    print("=== SISTEMA DE TIENDA DE LIBROS ===\n")
     
-    while True:
-        mostrarMenuPrincipal()
-        opcion = input("Ingrese una opción: ")
+    tienda = TiendaDeLibros()
+    print(f"Caja inicial: ${tienda.darCaja():.2f}\n")
+    
+    # Registro de algunos libros
+    try:
+        libro1 = tienda.registrarLibro("9789584276148", "Cien años de soledad", 30000, 45000)
+        print(f"Libro registrado: {libro1.toString()}")
         
-        if opcion == "1":  # Registrar libro
-            isbn = input("Ingrese ISBN: ")
-            titulo = input("Ingrese título: ")
-            
-            try:
-                precioCompra = float(input("Ingrese precio de compra: "))
-                precioVenta = float(input("Ingrese precio de venta: "))
-                
-                if precioCompra <= 0 or precioVenta <= 0:
-                    print("Los precios deben ser mayores que cero.")
-                    continue
-                
-                if libreria.registrarLibro(isbn, titulo, precioCompra, precioVenta):
-                    print(f"Libro '{titulo}' registrado exitosamente.")
-                else:
-                    print(f"Error: Ya existe un libro con ISBN {isbn}.")
-            except ValueError:
-                print("Error: Los precios deben ser valores numéricos.")
+        libro2 = tienda.registrarLibro("9788498387087", "El Principito", 15000, 25000)
+        print(f"Libro registrado: {libro2.toString()}")
+                                      
+        libro3 = tienda.registrarLibro("9788498383621", "El Código Da Vinci", 25000, 38000)
+        print(f"Libro registrado: {libro3.toString()}")
         
-        elif opcion == "2":  # Eliminar libro
-            isbn = input("Ingrese ISBN del libro a eliminar: ")
-            if libreria.eliminarLibro(isbn):
-                print("Libro eliminado exitosamente.")
-            else:
-                print(f"Error: No se encontró un libro con ISBN {isbn}.")
+        print("\nCatálogo actual:")
+        for libro in tienda.darCatalogo():
+            print(f"- {libro.toString()}")
+    except ValueError as e:
+        print(f"Error: {e}")
+
+    
+    # Abastecer libros
+    fecha_actual = obtener_fecha_actual()
+    print("\n=== ABASTECIMIENTO DE LIBROS ===")
+    
+
+    if tienda.abastecer("9789584276148", 10, fecha_actual):
+        print(f"Se abasteció 'Cien años de soledad' con 10 ejemplares. Caja: ${tienda.darCaja():.2f}")
+    else:
+        print("No se pudo abastecer 'Cien años de soledad'")
+    
+    if tienda.abastecer("9788498387087", 15, fecha_actual):
+        print(f"Se abasteció 'El Principito' con 15 ejemplares. Caja: ${tienda.darCaja():.2f}")
+    else:
+        print("No se pudo abastecer 'El Principito'")
+    
+    if tienda.abastecer("9788498383621", 8, fecha_actual):
+        print(f"Se abasteció 'El Código Da Vinci' con 8 ejemplares. Caja: ${tienda.darCaja():.2f}")
+    else:
+        print("No se pudo abastecer 'El Código Da Vinci'")
+
+    
+    # Vender libros
+    print("\n=== VENTA DE LIBROS ===")
+    
+
+    if tienda.vender("9789584276148", 3, fecha_actual):
+        print(f"Se vendieron 3 ejemplares de 'Cien años de soledad'. Caja: ${tienda.darCaja():.2f}")
+    else:
+        print("No se pudo realizar la venta de 'Cien años de soledad'")
+    
+    if tienda.vender("9788498387087", 7, fecha_actual):
+        print(f"Se vendieron 7 ejemplares de 'El Principito'. Caja: ${tienda.darCaja():.2f}")
+    else:
+        print("No se pudo realizar la venta de 'El Principito'")
+    
+    # Intentar vender más ejemplares de los disponibles, error
+    if tienda.vender("9788498383621", 10, fecha_actual):
+        print(f"Se vendieron 10 ejemplares de 'El Código Da Vinci'. Caja: ${tienda.darCaja():.2f}")
+    else:
+        print("No se pudo realizar la venta de 'El Código Da Vinci' (stock insuficiente)")
+
+    
+    # Buscar libros
+    print("\n=== BÚSQUEDA DE LIBROS ===")
+    
+    # por título
+    titulo_buscar = "El Principito"
+    libro_encontrado = tienda.buscarLibroPorTitulo(titulo_buscar)
+    if libro_encontrado:
+        print(f"Libro encontrado por título '{titulo_buscar}': {libro_encontrado.toString()}")
+    else:
+        print(f"No se encontró ningún libro con título '{titulo_buscar}'")
+    
+    # por ISBN
+    isbn_buscar = "9788498383621"
+    libro_encontrado = tienda.buscarLibroPorISBN(isbn_buscar)
+    if libro_encontrado:
+        print(f"Libro encontrado por ISBN '{isbn_buscar}': {libro_encontrado.toString()}")
+    else:
+        print(f"No se encontró ningún libro con ISBN '{isbn_buscar}'")
         
-        elif opcion == "3":  # Buscar libro por título
-            titulo = input("Ingrese título del libro a buscar: ")
-            libro = libreria.buscarLibroPorTitulo(titulo)
-            if libro:
-                mostrarInfoLibro(libro)
-            else:
-                print(f"No se encontró un libro con el título '{titulo}'.")
-        
-        elif opcion == "4":  # Buscar libro por ISBN
-            isbn = input("Ingrese ISBN del libro a buscar: ")
-            libro = libreria.buscarLibroPorISBN(isbn)
-            if libro:
-                mostrarInfoLibro(libro)
-            else:
-                print(f"No se encontró un libro con ISBN {isbn}.")
-        
-        elif opcion == "5":  # Abastecer ejemplares
-            isbn = input("Ingrese ISBN del libro a abastecer: ")
-            try:
-                cantidad = int(input("Ingrese cantidad de ejemplares a abastecer: "))
-                if cantidad <= 0:
-                    print("La cantidad debe ser un número positivo.")
-                    continue
-                
-                if libreria.abastecerLibro(isbn, cantidad):
-                    print(f"Se abastecieron {cantidad} ejemplares correctamente.")
-                    print(f"Dinero en caja: ${libreria.darDineroEnCaja()}")
-                else:
-                    print("No se pudo realizar el abastecimiento. Verifique el ISBN y que haya suficiente dinero en caja.")
-            except ValueError:
-                print("Error: La cantidad debe ser un número entero.")
-        
-        elif opcion == "6":  # Vender ejemplares
-            isbn = input("Ingrese ISBN del libro a vender: ")
-            try:
-                cantidad = int(input("Ingrese cantidad de ejemplares a vender: "))
-                if cantidad <= 0:
-                    print("La cantidad debe ser un número positivo.")
-                    continue
-                
-                if libreria.venderLibro(isbn, cantidad):
-                    print(f"Se vendieron {cantidad} ejemplares correctamente.")
-                    print(f"Dinero en caja: ${libreria.darDineroEnCaja()}")
-                else:
-                    print("No se pudo realizar la venta. Verifique el ISBN y que haya suficiente stock.")
-            except ValueError:
-                print("Error: La cantidad debe ser un número entero.")
-        
-        elif opcion == "7":  # Calcular transacciones de abastecimiento
-            isbn = input("Ingrese ISBN del libro: ")
-            cantidad = libreria.contarTransaccionesAbastecimientoLibro(isbn)
-            if cantidad >= 0:
-                print(f"El libro ha tenido {cantidad} transacciones de abastecimiento.")
-            else:
-                print(f"No se encontró un libro con ISBN {isbn}.")
-        
-        elif opcion == "8":  # Buscar libro más costoso
-            libroMasCostoso = libreria.buscarLibroMasCostoso()
-            if libroMasCostoso:
-                print("\nEl libro más costoso es:")
-                mostrarInfoLibro(libroMasCostoso)
-            else:
-                print("No hay libros en el catálogo.")
-        
-        elif opcion == "9":  # Buscar libro menos costoso
-            libroMenosCostoso = libreria.buscarLibroMenosCostoso()
-            if libroMenosCostoso:
-                print("\nEl libro menos costoso es:")
-                mostrarInfoLibro(libroMenosCostoso)
-            else:
-                print("No hay libros en el catálogo.")
-        
-        elif opcion == "10":  # Buscar libro más vendido
-            libroMasVendido = libreria.buscarLibroMasVendido()
-            if libroMasVendido:
-                ventas = libroMasVendido.calcularTotalVendidos()
-                if ventas > 0:
-                    print(f"\nEl libro más vendido con {ventas} ejemplares es:")
-                    mostrarInfoLibro(libroMasVendido)
-                else:
-                    print("No hay libros vendidos aún.")
-            else:
-                print("No hay libros en el catálogo.")
-        
-        elif opcion == "11":  # Ver dinero en caja
-            print(f"Dinero actual en caja: ${libreria.darDineroEnCaja()}")
-        
-        elif opcion == "12":  # Ver catálogo completo
-            catalogo = libreria.darCatalogo()
-            if catalogo:
-                print("\n===== CATÁLOGO DE LIBROS =====")
-                for libro in catalogo:
-                    print(f"ISBN: {libro.darISBN()} - Título: {libro.darTitulo()} - " +
-                          f"Precio: ${libro.darPrecioVenta()} - Stock: {libro.darCantidadActual()}")
-            else:
-                print("El catálogo está vacío.")
-        
-        elif opcion == "0":  # Salir
-            print("Gracias por usar el sistema de gestión de librería.")
-            break
-        
-        else:
-            print("Opción inválida. Por favor, intente nuevamente.")
+    
+    # Libro más costoso
+    libro_mas_costoso = tienda.darLibroMasCostoso()
+    if libro_mas_costoso:
+        print(f"Libro más costoso: {libro_mas_costoso.toString()}")
+    
+    # Libro más económico
+    libro_mas_economico = tienda.darLibroMasEconomico()
+    if libro_mas_economico:
+        print(f"Libro más económico: {libro_mas_economico.toString()}")
+    
+    # Libro más vendido
+    libro_mas_vendido = tienda.darLibroMasVendido()
+    if libro_mas_vendido:
+        print(f"Libro más vendido: {libro_mas_vendido.toString()}")
+    
+    # Cantidad de transacciones de abastecimiento
+    isbn = "9789584276148"
+    libro = tienda.buscarLibroPorISBN(isbn)
+    if libro:
+        transacciones = tienda.darCantidadTransaccionesAbastecimiento(isbn)
+        print(f"Transacciones de abastecimiento de '{libro.darTitulo()}': {transacciones}")
 
 if __name__ == "__main__":
     main()
