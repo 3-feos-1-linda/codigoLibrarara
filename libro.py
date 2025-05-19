@@ -49,7 +49,7 @@ class Libro:
         return False
 
     
-    def abastecer(self, cantidad: int, fecha: str) -> void:
+    def abastecer(self, cantidad: int, fecha: str) -> None:
         if cantidad > 0:
             self.__cantidad_actual += cantidad
             transaccion = Transaccion(Tipo.ABASTECIMIENTO, fecha, cantidad)

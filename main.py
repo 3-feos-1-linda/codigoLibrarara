@@ -1,4 +1,4 @@
-from tiendaDeLibros import TiendaDeLibros
+from TiendaDeLibros import TiendaDeLibros
 from libro import Libro
 from transaccion import Transaccion
 from tipo import Tipo
@@ -10,7 +10,7 @@ def obtener_fecha_actual() -> str:
 
 
 def main():
-    print("SISTEMA DE TIENDA DE LIBROS\n")
+    print("<<< SISTEMA DE TIENDA DE LIBROS >>>\n")
     
     tienda = TiendaDeLibros()
     print(f"Caja inicial: ${tienda.darCaja():.2f}\n")

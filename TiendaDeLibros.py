@@ -15,7 +15,7 @@ class TiendaDeLibros:
         return self.__caja
 
     
-    def cambiarCaja(self, nueva_caja: float) -> void:
+    def cambiarCaja(self, nueva_caja: float) -> None:
         self.__caja = nueva_caja
 
     
